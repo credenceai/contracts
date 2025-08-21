@@ -1,0 +1,40 @@
+openapi: 3.0.3
+info:
+  title: CredenceAI (Preview)
+  version: 0.1.0
+  description: Claim → evidence retrieval → stance → verdict. Preview contract.
+paths:
+  /verify:
+    post:
+      summary: Verify a claim against retrieved evidence
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                claim:
+                  type: string
+                  minLength: 5
+                  maxLength: 500
+      responses:
+        '200':
+          description: Verdict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  claim: { type: string }
+                  verdict: { type: string, enum: [SUPPORTED, REFUTED, UNCLEAR] }
+                  confidence: { type: number, format: float }
+                  evidence:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        source: { type: string }
+                        url: { type: string, nullable: true }
+                        snippet: { type: string }
+                  rationale: { type: string }
